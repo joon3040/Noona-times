@@ -1,0 +1,36 @@
+.head-line{
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+}
+.head-line svg {
+    width: 430px;
+}
+.menus {
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* 요소들이 1줄에 길게 걸쳐 나열되어 있을 때 콘솔 탭이 생기면 옆으로 잘리는 영역들이 생기는데 이를 방지하기 위해 요소들을 여러줄에 걸쳐 표현하는 기술 */
+    border-top: 1px solid #ebebeb ;
+    border-bottom: 4px double black;
+}
+
+.menus button {
+    border: none;
+    background: none;
+    margin: 5px;
+
+}
+
+.menus button:hover{
+    background-color: beige;
+}
+
+.news-img-size{
+    max-width: 100%; /* 원본이미지가 아니라 부모 요소의 100%이므로 최대 크기가 이미지가 속한 칼럼의 크기와 똑같다는 의미이다*/
+    max-height: 250px; 
+}
+
+.news{  /* index.html에 있는 row news 클래스를 참조하여 아래쪽에 경계선이 생기게 한다. 클래스 참조 시 row만 쓰던가 news만 쓰던가 둘 중에 어떤 걸 써도 상관없는것으로 보임 */
+    border-bottom: 1px solid black; 
+}
