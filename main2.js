@@ -1,7 +1,7 @@
 const API_KEY='502940776a0f47cba9b920a2b4327f2b';
 const getNews = () {
     let url = new URL(
-    `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}` 
+    `https://noona-times90.netlify.app/` 
     
     );
     console.log("uuu", url);
