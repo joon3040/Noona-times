@@ -5,7 +5,7 @@ menus.forEach(menu=>menu.addEventListener("click", (event)=>getNewsByCategory(ev
 
 const getLatestNews = async () => {
     const url = new URL(
-        `https://noona-times90.netlify.app/`) ;
+        `https://noona-times90.netlify.app/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`) ;
     const response = await fetch(url);
     const data = await response.json();
     newsList = data.articles;
@@ -13,11 +13,11 @@ const getLatestNews = async () => {
     console.log("dddddd", newsList);    
 };
 
-const getNewsByCategory=(event)=>{
+const getNewsByCategory= async (event)=>{
         const category = event.target.textContent.toLowerCase();
     console.log("category")
     const url = new URL(
-        `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`) ;
+        `https://noona-times90.netlify.app/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`) ;
     const response = await fetch(url);
     const data = await response.json();
     console.log("Ddd", data)
@@ -48,6 +48,7 @@ const render=()=>{
 
 
 getLatestNews();
+getNewsByCategory();
 
 
 //1. 버튼들에 클릭이벤트를 주기
