@@ -1,26 +1,38 @@
 const API_KEY='502940776a0f47cba9b920a2b4327f2b';
-let newsList=[]
-const menus = document.querySelectorAll(".menus button")
-menus.forEach(menu=>menu.addEventListener("click", (event)=>getNewsByCategory(event))) 
+let newsList=[];
+const menus = document.querySelectorAll(".menus button");
+menus.forEach(menu=>menu.addEventListener("click", (event)=>getNewsByCategory(event)));
 
-const getLatestNews = async () => {
-    const url = new URL(
-        `https://noona-times90.netlify.app/top-headlines?`) ;
+let url = new URL(`https://noona-times90.netlify.app/top-headlines?country=kr&apiKey=${API_KEY}`)
+
+const getNews = async () => {
     const response = await fetch(url);
     const data = await response.json();
     newsList = data.articles;
     render();  
+}
+
+const getLatestNews = async () => {
+    url = new URL(
+        `https://noona-times90.netlify.app/top-headlines?country=kr&apiKey=${API_KEY}`
+        ) ;
+        getNews();
 };
 
 const getNewsByCategory= async (event)=>{
         const category = event.target.textContent.toLowerCase();
-    const url = new URL(
-        `https://noona-times90.netlify.app/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`) ;
-    const response = await fetch(url);
-    const data = await response.json();
-        newsList = data.articles;
-    render();
-}
+    url = new URL(
+        `https://noona-times90.netlify.app/top-headlines?country=kr&category=${category}&apiKey=${API_KEY}`) ;
+   getNews();
+};
+
+const getNewsByKeyword= async () => {
+
+    const keyword = document.getElementById("search-input").value;
+    url = new URL(
+        `https://noona-times90.netlify.app/top-headlines?country=kr&q=${keyword}&apiKey=${API_KEY}`) ;
+    getNews();
+};
 
 const render=()=>{
     const newsHTML = newsList.map((news)=>`<div class="row news"> 
@@ -38,7 +50,7 @@ const render=()=>{
     </div>
 </div>`)
     .join("");
-    console.log("html", newsHTML)
+
 
     document.getElementById("news-board").innerHTML=newsHTML
 }
