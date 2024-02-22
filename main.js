@@ -5,12 +5,11 @@ menus.forEach(menu=>menu.addEventListener("click", (event)=>getNewsByCategory(ev
 
 const getLatestNews = async () => {
     const url = new URL(
-        `https://noona-times90.netlify.app/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`) ;
+        `https://noona-times90.netlify.app/top-headlines?`) ;
     const response = await fetch(url);
     const data = await response.json();
     newsList = data.articles;
-    render();
-    console.log("dddddd", newsList);    
+    render();  
 };
 
 const getNewsByCategory= async (event)=>{
