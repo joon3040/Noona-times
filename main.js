@@ -6,11 +6,26 @@ menus.forEach(menu=>menu.addEventListener("click", (event)=>getNewsByCategory(ev
 let url = new URL(`https://noona-times90.netlify.app/top-headlines?country=kr&apiKey=${API_KEY}`)
 
 const getNews = async () => {
-    const response = await fetch(url);
-    const data = await response.json();
-    newsList = data.articles;
-    render();  
-}
+        try{  
+            const response = await fetch(url);
+            const data = await response.json();
+            if(response.status===200){  // status 200은 정상, 나머지는 오류이므로 정상일경우 그대로 출력하고 else일 경우 error를 던진다.
+                if(data.articles.length===0){
+                    throw new Error("No result for this search");
+                }
+                newsList = data.articles;
+                render();
+            }else{
+                throw new Error(data.message);
+            }
+            
+            
+
+        }catch(error){
+            errorRender(error.message) // 해당 오류 상태 결과값을 가진 error를 try에서 던져서 catch에서 잡은 후 error.message로 오류 내용을 errorRender 함수에 전달한다.
+        };
+  
+};
 
 const getLatestNews = async () => {
     url = new URL(
@@ -53,11 +68,20 @@ const render=()=>{
 
 
     document.getElementById("news-board").innerHTML=newsHTML
-}
+};
+
+const errorRender = (errorMessage)=>{
+  const errorHTML = `<div class="alert alert-danger" role="alert">
+    ${errorMessage}
+  </div>`; // 부트스트랩에 있는 error 경고문 HTML을 자바스크립트 형태로 쓰기 위해 errorHTML에 넣어준다.
+   
+document.getElementById("news-board").innerHTML= errorHTML
+};
+
 
 
 getLatestNews();
-getNewsByCategory();
+
 
 
 //1. 버튼들에 클릭이벤트를 주기
