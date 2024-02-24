@@ -3,18 +3,30 @@ let newsList=[];
 const menus = document.querySelectorAll(".menus button");
 menus.forEach(menu=>menu.addEventListener("click", (event)=>getNewsByCategory(event)));
 
-let url = new URL(`https://noona-times90.netlify.app/top-headlines?country=kr&apiKey=${API_KEY}`)
+let url = new URL(`https://noona-times90.netlify.app/top-headlines?country=kr&apiKey=${API_KEY}`);
+
+let totalResults = 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 5;
+
 
 const getNews = async () => {
-        try{  
+        try{
+            url.searchParams.set("page", page); // url함수 중 page 인수를 찾아서 붙여주는 함수, 미리 설정한 page 변수의 값을 인수로 전달하므로 URL 주소에 &page=page로 끝에 붙게 된다.
+            url.searchParams.set("pageSize", pageSize);  
+
             const response = await fetch(url);
+            
             const data = await response.json();
             if(response.status===200){  // status 200은 정상, 나머지는 오류이므로 정상일경우 그대로 출력하고 else일 경우 error를 던진다.
                 if(data.articles.length===0){
                     throw new Error("No result for this search");
                 }
                 newsList = data.articles;
+                totalResults = data.totalResults
                 render();
+                paginationRender();
             }else{
                 throw new Error(data.message);
             }
@@ -78,8 +90,48 @@ const errorRender = (errorMessage)=>{
 document.getElementById("news-board").innerHTML= errorHTML
 };
 
+const paginationRender=()=>{
+    //totalResults
+    //page
+    //pageSize
+    //groupSize
+    //totalPages;
+    const totalPages = Math.ceil(totalResults / pageSize);
+    //pageGroup
+    const pageGroup = Math.ceil(page/groupSize);
+    //lastPage
+    const lastPage = pageGroup * groupSize;
+    // 마지막 페이지가 그룹사이즈보다 작을 경우 lastpage = totalpage
+    if(lastPage > totalPages){
+        lastPage = totalPages;
+    }
+    //firstPage
+    const firstPage = lastPage - (groupSize -1)<=0? 1: lastPage - (groupSize -1);
 
+    let paginationHTML=`<li class="page-item" onclick="moveToPage(${page-1})"><a class="page-link" href="#">Previous</a></li>`;
 
+    for(let i=firstPage; i<=lastPage;i++){
+        paginationHTML+=`<li class="page-item ${i===page? "active":""}" onclick="moveToPage(${i})"><a class="page-link">${i}</a></li>`
+    };
+    paginationHTML += `<li class="page-item" onclick="moveToPage(${page+1})"><a class="page-link" href="#">Next</a></li>`;
+    document.querySelector(".pagination").innerHTML = paginationHTML;
+
+/*     <nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+  </ul>
+</nav> */
+}
+
+const moveToPage=(pageNum)=>{
+   console.log("movetopage", pageNum);
+   page = pageNum;
+   getNews()
+}
 getLatestNews();
 
 
