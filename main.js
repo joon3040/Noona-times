@@ -96,11 +96,12 @@ const paginationRender=()=>{
     //pageSize
     //groupSize
     //totalPages;
+    
     const totalPages = Math.ceil(totalResults / pageSize);
     //pageGroup
     const pageGroup = Math.ceil(page/groupSize);
     //lastPage
-    const lastPage = pageGroup * groupSize;
+    let lastPage = pageGroup * groupSize; //아래 조건문에 의해 lastPage 값이 변경될 수 있으므로 const가 아닌 let으로 선언한다.
     // 마지막 페이지가 그룹사이즈보다 작을 경우 lastpage = totalpage
     if(lastPage > totalPages){
         lastPage = totalPages;
@@ -108,13 +109,28 @@ const paginationRender=()=>{
     //firstPage
     const firstPage = lastPage - (groupSize -1)<=0? 1: lastPage - (groupSize -1);
 
-    let paginationHTML=`<li class="page-item" onclick="moveToPage(${page-1})"><a class="page-link" href="#">Previous</a></li>`;
+    
+    let paginationHTML = ``;
+    if (firstPage >= 6){ 
+    paginationHTML=
+    `<li class="page-item" onclick="moveToPage(1)"><a class="page-link" href='#js-bottom'>&lt;&lt;</a></li>
+     <li class="page-item" onclick="moveToPage(${page - 1})"><a class="page-link" href='#js-bottom'>&lt;</a></li>`
+};
+// 첫번째 페이지가 6보다 같거나 클 경우 이전 화살표 추가되므로 6~10 그룹부터 이전 화살표 버튼이 생긴다.
+  
 
     for(let i=firstPage; i<=lastPage;i++){
         paginationHTML+=`<li class="page-item ${i===page? "active":""}" onclick="moveToPage(${i})"><a class="page-link">${i}</a></li>`
     };
-    paginationHTML += `<li class="page-item" onclick="moveToPage(${page+1})"><a class="page-link" href="#">Next</a></li>`;
+
+    if (lastPage < totalPages){
+    paginationHTML += 
+    `<li class="page-item" onclick="moveToPage(${page + 1})"><a  class="page-link" href='#js-program-detail-bottom'>&gt;</a></li>
+    <li class="page-item" onclick="moveToPage(${totalPages})"><a class="page-link" href='#js-bottom'>&gt;&gt;</a></li>`;
+    };    // 마지막 16~20 그룹에서는 lastpage = 20이고 totalpages =20으로 같기 때문에 다음 화살표가 추가되지 않는다.
     document.querySelector(".pagination").innerHTML = paginationHTML;
+};
+    
 
 /*     <nav aria-label="Page navigation example">
   <ul class="pagination">
@@ -125,7 +141,7 @@ const paginationRender=()=>{
     <li class="page-item"><a class="page-link" href="#">Next</a></li>
   </ul>
 </nav> */
-}
+
 
 const moveToPage=(pageNum)=>{
    console.log("movetopage", pageNum);
